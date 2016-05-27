@@ -11,6 +11,15 @@ namespace BadiService.Areas.Badi.Models
 
     public Dictionary<int, int> NawRuzOffsetFrom21 { get; private set; }
 
+    public int GetNawRuzOffset(int bYear)
+    {
+      if (NawRuzOffsetFrom21.ContainsKey(bYear))
+      {
+        return NawRuzOffsetFrom21[bYear];
+      }
+      return 0;
+    }
+
     public Dictionary<int, string> TwinHolyBirthdays { get; private set; }
 
     

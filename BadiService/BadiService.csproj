@@ -163,6 +163,10 @@
     <Compile Include="Areas\Badi\BadiAreaRegistration.cs" />
     <Compile Include="Areas\Badi\Controllers\TodayController.cs" />
     <Compile Include="Areas\Badi\Models\BadiCalc.cs" />
+    <Compile Include="Areas\Badi\Models\BadiDate.cs" />
+    <Compile Include="Areas\Badi\Models\BadiExtensions.cs" />
+    <Compile Include="Areas\Badi\Models\BeforeAfterMidnight.cs" />
+    <Compile Include="Areas\Badi\Models\BeforeAfterSunset.cs" />
     <Compile Include="Areas\Badi\Models\PresetKnowledge.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
