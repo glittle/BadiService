@@ -1,16 +1,12 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Microsoft.VisualStudio.TestTools.UnitTesting;
+using NUnit.Framework;
 
 namespace BadiService.Tests
 {
   public static class ExtensionsForTesting
   {
     /// <summary>
-    /// Assert that the value is as expected
+    ///   Assert that the value is as expected
     /// </summary>
     /// <typeparam name="T"></typeparam>
     /// <param name="actual"></param>
@@ -21,7 +17,7 @@ namespace BadiService.Tests
     }
 
     /// <summary>
-    /// Compare just the day, ignoring any time
+    ///   Compare just the day, ignoring any time
     /// </summary>
     /// <param name="actual"></param>
     /// <param name="expected"></param>
