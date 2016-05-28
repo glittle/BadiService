@@ -24,16 +24,17 @@ namespace BadiService.Tests.Badi
     [TestCase(2014, 3, 21, RelationToSunset.gDayBeforeSunset, 171, 1, 1, RelationToMidnight.bDayAfterMidnight)]
     //2016
     [TestCase(2016, 3, 19, RelationToSunset.gDayBeforeSunset, 172, 19, 19, RelationToMidnight.bDayAfterMidnight)]
-    [TestCase(2016, 3, 19, RelationToSunset.gDayAfterSunset, 173, 1, 1, RelationToMidnight.bDayBeforeMidnight)]
 
+    [TestCase(2016, 3, 19, RelationToSunset.gDayAfterSunset, 173, 1, 1, RelationToMidnight.bDayBeforeMidnight)]
     [TestCase(2016, 3, 20, RelationToSunset.gDayBeforeSunset, 173, 1, 1, RelationToMidnight.bDayAfterMidnight)]
+
+    // after naw ruz
     [TestCase(2016, 3, 20, RelationToSunset.gDayAfterSunset, 173, 1, 2, RelationToMidnight.bDayBeforeMidnight)]
 
     [TestCase(2016, 3, 21, RelationToSunset.gDayBeforeSunset, 173, 1, 2, RelationToMidnight.bDayAfterMidnight)]
-
-
-    // after naw ruz
+    [TestCase(2016, 3, 21, RelationToSunset.gDayAfterSunset, 173, 1, 3, RelationToMidnight.bDayAfterMidnight)]
     [TestCase(2016, 5, 26, RelationToSunset.gDayBeforeSunset, 173, 4, 11, RelationToMidnight.bDayAfterMidnight)]
+
     // around ayyam-i-ha
     [TestCase(2017, 2, 25, RelationToSunset.gDayBeforeSunset, 173, 0, 1, RelationToMidnight.bDayAfterMidnight)]
     [TestCase(2017, 2, 28, RelationToSunset.gDayBeforeSunset, 173, 0, 4, RelationToMidnight.bDayAfterMidnight)]

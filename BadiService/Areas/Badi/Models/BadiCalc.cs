@@ -11,57 +11,72 @@ namespace BadiService.Areas.Badi.Models
     private PresetKnowledge PresetKnowledge => _presetKnowledge ?? (_presetKnowledge = new PresetKnowledge());
 
 
-    public BadiDate GetBadiDate(DateTime gDate, RelationToSunset relationToSunSet)
+    public BadiDate GetBadiDate(DateTime gDate, RelationToSunset relationToSunset)
     {
+      // when extended to consider real sunset, can remove the "relationToSunset" parameter
       // not dealing with sunset. Force to before or after sunset...
       gDate = new DateTime(gDate.Year, gDate.Month, gDate.Day, DefaultSunsetHour,
-        DefaultSunsetMinute + (relationToSunSet == RelationToSunset.gDayAfterSunset ? 5 : -5), 0);
+        DefaultSunsetMinute + (relationToSunset == RelationToSunset.gDayAfterSunset ? 5 : -5), 0);
 
-      var isAfterNawRuz = IsAfterNawRuz(gDate);
 
       // if gDate > sunset offset = 0
-      var afterSunsetOffset = relationToSunSet == RelationToSunset.gDayAfterSunset ? 1 : 0;
+      var afterSunsetOffset = relationToSunset == RelationToSunset.gDayAfterSunset ? 1 : 0;
+
+      var bDayRelationToMidnight = relationToSunset == RelationToSunset.gDayAfterSunset ? RelationToMidnight.bDayBeforeMidnight : RelationToMidnight.bDayAfterMidnight;
 
       var year = gDate.Year - 1844;
       int month;
       int day;
-      if (isAfterNawRuz)
+      var nawRuz = GetNawRuz(gDate.Year);
+      var isAfterStartOfNawRuz = gDate >= nawRuz;
+      if (isAfterStartOfNawRuz)
       {
-        var nawRuz = GetNawRuz(gDate.Year);
+        // forward: March - Dec
+        var dayOfBadiYear = gDate.DayOfYear - nawRuz.DayOfYear + afterSunsetOffset;
+        var month0 = (int)Math.Floor(dayOfBadiYear / 19D);
+
         year++;
-        day = gDate.DayOfYear - nawRuz.DayOfYear + afterSunsetOffset;
-        month = 1 + (int)Math.Floor(day / 19D);
-        day = day - (month - 1) * 19;
+        day = dayOfBadiYear - month0 * 19;
+        month = month0 + 1;
       }
       else
       {
+        // back: Jan - March
         var lastDec31 = new DateTime(gDate.Year - 1, 12, 31);
         var lastNawRuz = GetNawRuz(gDate.Year - 1, true);
 
-        day = gDate.DayOfYear + (lastDec31.DayOfYear - lastNawRuz.DayOfYear) + afterSunsetOffset;
-        month = 1 + (int)Math.Floor(day / 19D);
-        day = day % 19;
-        if (day == 0)
-        {
-          day = 19;
-          month--;
-        }
+        var dayOfBadiYear = gDate.DayOfYear + lastDec31.DayOfYear - lastNawRuz.DayOfYear + afterSunsetOffset;
+        var month0 = (int)Math.Floor(dayOfBadiYear / 19D);
+        day = dayOfBadiYear - month0 * 19;
+        month = month0 + 1;
+
         if (month >= 19)
         {
-          var lastDayOfAyyamiHa = GetGDate(year, 19, 1).AddDays(-1);
-          if (gDate.DayOfYear >= lastDayOfAyyamiHa.DayOfYear)
+          // In ayyam-i-ha or Loftiness
+          var firstDayOfLoftiness = nawRuz.AddDays(-19);
+          if (gDate < firstDayOfLoftiness)
           {
-            month = 19;
-            day = gDate.DayOfYear - 1 - lastDayOfAyyamiHa.DayOfYear + afterSunsetOffset;
+            // in ayyam-i-ha
+            month = 0;
           }
           else
           {
-            month = 0;
+            // in Loftiness
+            month = 19;
+            day = 1 + gDate.DayOfYear - firstDayOfLoftiness.DayOfYear + afterSunsetOffset;
+
+            if (day == 20)
+            {
+              // after sunset on last day
+              year++;
+              month = 1;
+              day = 1;
+            }
           }
         }
       }
 
-      return new BadiDate(year, month, day, RelationToMidnight.bDayAfterMidnight);
+      return new BadiDate(year, month, day, bDayRelationToMidnight);
     }
 
     public DateTime GetGDate(int bYear, int bMonth, int bDay, RelationToMidnight relationToMidnight = RelationToMidnight.bDayAfterMidnight,
@@ -178,11 +193,11 @@ namespace BadiService.Areas.Badi.Models
 
     public int GetBadiYear(DateTime gDate)
     {
-      return gDate.Year - 1843 - (IsAfterNawRuz(gDate) ? 0 : 1);
+      return gDate.Year - 1843 - (IsAfterStartOfNawRuz(gDate) ? 0 : 1);
     }
 
 
-    public bool IsAfterNawRuz(DateTime gDate)
+    public bool IsAfterStartOfNawRuz(DateTime gDate)
     {
       return gDate >= GetNawRuz(gDate.Year);
     }
