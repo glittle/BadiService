@@ -52,7 +52,7 @@ namespace BadiService.Areas.Badi.Models
           if (gDate.DayOfYear >= lastDayOfAyyamiHa.DayOfYear)
           {
             month = 19;
-            day = gDate.DayOfYear - lastDayOfAyyamiHa.DayOfYear + afterSunsetOffset;
+            day = gDate.DayOfYear - 1 - lastDayOfAyyamiHa.DayOfYear + afterSunsetOffset;
           }
           else
           {
