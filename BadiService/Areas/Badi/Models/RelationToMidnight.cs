@@ -3,7 +3,7 @@
   public enum RelationToMidnight
   {
     Undefined,
-    bDayBeforeMidnight,
-    bDayAfterMidnight
+    bEveFrag1,
+    bDayFrag2
   }
 }

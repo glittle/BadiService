@@ -169,6 +169,7 @@
     <Compile Include="Areas\Badi\Models\RelationToMidnight.cs" />
     <Compile Include="Areas\Badi\Models\RelationToSunset.cs" />
     <Compile Include="Areas\Badi\Models\PresetKnowledge.cs" />
+    <Compile Include="Areas\Badi\Models\SunCalc.cs" />
     <Compile Include="Areas\HelpPage\ApiDescriptionExtensions.cs" />
     <Compile Include="Areas\HelpPage\App_Start\HelpPageConfig.cs" />
     <Compile Include="Areas\HelpPage\Controllers\HelpController.cs" />

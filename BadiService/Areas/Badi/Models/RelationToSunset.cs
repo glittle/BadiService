@@ -4,7 +4,7 @@
   {
 
     Undefined,
-    gDayBeforeSunset,
-    gDayAfterSunset
+    gBeforeSunset,
+    gAfterSunset
   }
 }
