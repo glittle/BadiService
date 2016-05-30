@@ -20,10 +20,7 @@ namespace BadiService.Areas.Badi.Models
       // strip off time
       gSourceDate = gSourceDate.Date;
 
-//      var afterSunsetOffset = relationToSunset == RelationToSunset.gAfterSunset ? 1 : 0;
-//      gSourceDate = gSourceDate.AddDays(afterSunsetOffset);
-
-      var bDayRelationToMidnight = relationToSunset == RelationToSunset.gAfterSunset ? RelationToMidnight.bEveFrag1 : RelationToMidnight.bDayFrag2;
+      var bDayRelationToMidnight = relationToSunset == RelationToSunset.gAfterSunset ? RelationToMidnight.bEvePrior_AfterSunset_Frag1 : RelationToMidnight.bDay_BeforeSunset_Frag2;
 
       int bMonth;
       int bDay;
@@ -38,32 +35,17 @@ namespace BadiService.Areas.Badi.Models
 
       var bYear = gSourceDate.Year - (gSourceDate >= gDayOfNawRuz ? 1843 : 1844);
 
-      var isAfterAyyamiHa = gSourceDate >= gDayLoftiness1;
-      if (isAfterAyyamiHa)
-      {
-        // forward: Loftiness --> Dec
-        var bDaysAfterLoftiness1 = gSourceDate.DayOfYear - gDayLoftiness1.DayOfYear;
-        var bNumMonthsFromLoftiness = (int)Math.Floor(bDaysAfterLoftiness1 / 19D);
-
-        bDay = bDaysAfterLoftiness1 - bNumMonthsFromLoftiness * 19 + 1;
-        bMonth = bNumMonthsFromLoftiness;
-
-        if (bMonth == 0)
-        {
-          bMonth = 19;
-        }
-      }
-      else
+      var isBeforeLoftiness = gSourceDate < gDayLoftiness1;
+      if (isBeforeLoftiness)
       {
         // back: Jan --> end of AyyamiHa
-        var lastDec31DayOfYear = new DateTime(gSourceDate.Year - 1, 12, 31).DayOfYear;
-        var lastNawRuzDayOfYear = GetNawRuz(gSourceDate.Year - 1, true).DayOfYear;
-        var daysInLastGregYear = lastDec31DayOfYear - lastNawRuzDayOfYear;
+        var dec31OfLastYear = new DateTime(gSourceDate.Year - 1, 12, 31).DayOfYear;
+        var nawRuzOfLastYear = GetNawRuz(gSourceDate.Year - 1, true).DayOfYear;
+        var daysInLastGregYear = dec31OfLastYear - nawRuzOfLastYear;
+        var daysAfterLastNawRuz = daysInLastGregYear + gSourceDate.DayOfYear;
 
-        var dayOfBadiYear = daysInLastGregYear + gSourceDate.DayOfYear;
-
-        var month0 = (int)Math.Floor(dayOfBadiYear / 19D);
-        bDay = dayOfBadiYear - month0 * 19 + 1;
+        var month0 = (int) Math.Floor(daysAfterLastNawRuz/19D);
+        bDay = 1 + daysAfterLastNawRuz - month0*19;
         bMonth = month0 + 1;
 
         if (bMonth == 19)
@@ -71,11 +53,25 @@ namespace BadiService.Areas.Badi.Models
           bMonth = 0;
         }
       }
+      else
+      {
+        // forward: Loftiness --> Dec
+        var bDaysAfterLoftiness1 = gSourceDate.DayOfYear - gDayLoftiness1.DayOfYear;
+        var bNumMonthsFromLoftiness = (int) Math.Floor(bDaysAfterLoftiness1/19D);
+
+        bDay = 1 + bDaysAfterLoftiness1 - bNumMonthsFromLoftiness*19;
+        bMonth = bNumMonthsFromLoftiness;
+
+        if (bMonth == 0)
+        {
+          bMonth = 19;
+        }
+      }
 
       return new BadiDate(bYear, bMonth, bDay, bDayRelationToMidnight);
     }
 
-    public DateTime GetGDate(int bYear, int bMonth, int bDay, RelationToMidnight relationToMidnight = RelationToMidnight.bDayFrag2,
+    public DateTime GetGDate(int bYear, int bMonth, int bDay, RelationToMidnight relationToMidnight = RelationToMidnight.bDay_BeforeSunset_Frag2,
       bool autoFix = false)
     {
       if (bMonth < 0)
@@ -159,8 +155,8 @@ namespace BadiService.Areas.Badi.Models
 
         default:
           var nawRuz = GetNawRuz(gYear, true);
-          var beforeMidnightOffset = relationToMidnight == RelationToMidnight.bDayFrag2 ? 1 : 0;
-          answer = nawRuz.AddDays((bMonth - 1) * 19 + (bDay - 1 + beforeMidnightOffset));
+          //var beforeMidnightOffset = relationToMidnight == RelationToMidnight.bDay_BeforeSunset_Frag2 ? 1 : 0;
+          answer = nawRuz.AddDays((bMonth - 1) * 19 + bDay);
           break;
       }
 
