@@ -1,12 +1,14 @@
 ﻿using System;
 using System.Diagnostics;
-using System.Web.UI.WebControls;
 
 namespace BadiService.Areas.Badi.Models
 {
   [DebuggerDisplay("{Year}.{Month}.{Day} {RelationToMidnight}")]
   public class BadiDate : IEquatable<BadiDate>
   {
+    private BadiDayInfo _badiDayInfo;
+    private BadiMonthInfo _badiMonthInfo;
+
     public BadiDate(int year, int month, int days, RelationToMidnight relationToMidnight)
     {
       Year = year;
@@ -15,22 +17,26 @@ namespace BadiService.Areas.Badi.Models
       RelationToMidnight = relationToMidnight;
     }
 
-    public int Year { get; set; }
-    public int Month { get; set; }
-    public int Day { get; set; }
+    public int Year { get; private set; }
+    public int Month { get; private set; }
+    public int Day { get; private set; }
+
+    public BadiMonthInfo BadiMonthInfo => _badiMonthInfo ?? (_badiMonthInfo = new BadiMonthInfo(this));
+    public BadiDayInfo BadiDayInfo => _badiDayInfo ?? (_badiDayInfo = new BadiDayInfo(this));
 
     public RelationToMidnight RelationToMidnight { get; set; }
-
-    public override string ToString()
-    {
-      return Year + "." + Month + "." + Day + " " + RelationToMidnight;
-    }
 
     public bool Equals(BadiDate other)
     {
       if (ReferenceEquals(null, other)) return false;
       if (ReferenceEquals(this, other)) return true;
-      return Year == other.Year && Month == other.Month && Day == other.Day && RelationToMidnight == other.RelationToMidnight;
+      return Year == other.Year && Month == other.Month && Day == other.Day &&
+             RelationToMidnight == other.RelationToMidnight;
+    }
+
+    public override string ToString()
+    {
+      return Year + "." + Month + "." + Day + " " + RelationToMidnight;
     }
 
     public override bool Equals(object obj)
@@ -46,9 +52,9 @@ namespace BadiService.Areas.Badi.Models
       unchecked
       {
         var hashCode = Year;
-        hashCode = (hashCode * 397) ^ Month;
-        hashCode = (hashCode * 397) ^ Day;
-        hashCode = (hashCode * 397) ^ (int) RelationToMidnight;
+        hashCode = (hashCode*397) ^ Month;
+        hashCode = (hashCode*397) ^ Day;
+        hashCode = (hashCode*397) ^ (int) RelationToMidnight;
         return hashCode;
       }
     }

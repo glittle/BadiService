@@ -14,5 +14,12 @@ namespace BadiService.Controllers
 
       return View();
     }
+
+    public ActionResult Samples()
+    {
+      ViewBag.Title = "Samples";
+       
+      return View();
+    }
   }
 }

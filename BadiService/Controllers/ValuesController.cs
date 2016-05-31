@@ -7,7 +7,7 @@ using System.Web.Http;
 
 namespace BadiService.Controllers
 {
-  public class ValuesController : ApiController
+  public class SamplesController : ApiController
   {
     // GET api/values
     public IEnumerable<string> Get()

@@ -1,0 +1,46 @@
+﻿  <div>
+    <h2>All Products</h2>
+    <ul id="products" />
+  </div>
+  <div>
+    <h2>Get Date</h2>
+    <input type="number" id="gYear" size="4" min="1844" step="1" />
+    <input type="number" id="gMonth" size="3" min="1" max="12" step="1" />
+    <input type="number" id="gDay" size="3" min="1" max="31" step="1"/>
+    <input type="button" value="Search" onclick="get();" />
+    <p id="product" />
+  </div>
+
+  <script src="~/scripts/jquery-2.2.3.min.js"></script>
+  <script>
+    var uri = 'badi/get';
+
+    $(document).ready(function () {
+      // Send an AJAX request
+      $.getJSON(uri)
+          .done(function (data) {
+            // On success, 'data' contains a list of products.
+            $.each(data, function (key, item) {
+              // Add a list item for the product.
+              $('<li>', { text: formatItem(item) }).appendTo($('#products'));
+            });
+          });
+    });
+
+    function formatItem(item) {
+      return item.Name + ': $' + item.Price;
+    }
+
+    function get() {
+      var year = $('#gYear').val();
+      var month = $('#gMonth').val();
+      var day = $('#gDay').val();
+      $.getJSON(uri + '/' + id)
+          .done(function (data) {
+            $('#product').text(formatItem(data));
+          })
+          .fail(function (jqXHR, textStatus, err) {
+            $('#product').text('Error: ' + err);
+          });
+    }
+  </script>

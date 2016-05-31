@@ -87,6 +87,10 @@
       <HintPath>..\packages\Newtonsoft.Json.8.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="RouteDebugger, Version=2.1.5.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\routedebugger.2.1.5\lib\net40\RouteDebugger.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Data" />
     <Reference Include="System.Drawing" />
@@ -162,10 +166,13 @@
     <Compile Include="App_Start\RouteConfig.cs" />
     <Compile Include="App_Start\WebApiConfig.cs" />
     <Compile Include="Areas\Badi\BadiAreaRegistration.cs" />
-    <Compile Include="Areas\Badi\Controllers\TodayController.cs" />
+    <Compile Include="Areas\Badi\Controllers\GetController.cs" />
     <Compile Include="Areas\Badi\Models\BadiCalc.cs" />
     <Compile Include="Areas\Badi\Models\BadiDate.cs" />
     <Compile Include="Areas\Badi\Models\BadiExtensions.cs" />
+    <Compile Include="Areas\Badi\Models\BadiDayInfo.cs" />
+    <Compile Include="Areas\Badi\Models\BadiMonthInfo.cs" />
+    <Compile Include="Areas\Badi\Models\BadiNames.cs" />
     <Compile Include="Areas\Badi\Models\RelationToMidnight.cs" />
     <Compile Include="Areas\Badi\Models\RelationToSunset.cs" />
     <Compile Include="Areas\Badi\Models\PresetKnowledge.cs" />
@@ -265,6 +272,7 @@
     <Content Include="Views\Shared\Error.cshtml" />
     <Content Include="Views\Shared\_Layout.cshtml" />
     <Content Include="Service References\Application Insights\ConnectedService.json" />
+    <Content Include="Views\Home\Samples.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <WCFMetadata Include="Service References\" />
