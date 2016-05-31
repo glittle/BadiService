@@ -129,15 +129,10 @@ namespace BadiService.Areas.Badi.Models
       {
         case 0:
         case 19:
-          var nextNawRuz = GetNawRuz(gYear + 1, true);
-          var startOfAla = nextNawRuz.AddDays(-19);
 
           if (bMonth == 0)
           {
-            var firstDayOfAyyamiHa = GetGDate(bYear, 18, 19).AddDays(1);
-            var lastDayOfAyyamiHa = GetGDate(bYear, 19, 1).AddDays(-1);
-
-            var numDaysInAyyamiHa = DaysBetween(firstDayOfAyyamiHa, lastDayOfAyyamiHa);
+            var numDaysInAyyamiHa = DaysInAyyamiHa(bYear);
             if (bDay > numDaysInAyyamiHa)
             {
               if (autoFix)
@@ -150,7 +145,11 @@ namespace BadiService.Areas.Badi.Models
               }
             }
           }
-          answer = startOfAla.AddDays(bDay - 1);
+
+          var nextNawRuz = GetNawRuz(gYear + 1, true);
+          var firstDayOfLoftiness = nextNawRuz.AddDays(-19);
+
+          answer = firstDayOfLoftiness.AddDays(bDay - 1);
           break;
 
         default:
@@ -167,6 +166,14 @@ namespace BadiService.Areas.Badi.Models
       }
 
       return answer;
+    }
+
+    public int DaysInAyyamiHa(int bYear)
+    {
+      var firstDayOfAyyamiHa = GetGDate(bYear, 18, 19).AddDays(1);
+      var lastDayOfAyyamiHa = GetGDate(bYear, 19, 1).AddDays(-1);
+
+      return DaysBetween(firstDayOfAyyamiHa, lastDayOfAyyamiHa);
     }
 
     private DateTime GetNawRuz(int gYear, bool dateOnly = false)

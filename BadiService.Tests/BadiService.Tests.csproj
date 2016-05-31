@@ -95,6 +95,7 @@
     </Reference>
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Badi\BadiCalcTest_DaysInAyyamiHa.cs" />
     <Compile Include="Badi\BadiCalcTest_GetBadi.cs" />
     <Compile Include="Badi\BadiCalcTest_GetGregorian.cs" />
     <Compile Include="ExtensionsForTesting.cs" />
