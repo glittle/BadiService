@@ -23,18 +23,30 @@ namespace BadiService.Tests.Badi
     [TestCase(173, 1, 1, RelationToMidnight.bDay_BeforeSunset_Frag2, 2016, 3, 20)]
     public void GetGregorianDate_AroundNawRuz(int bYear, int bMonth, int bDay, RelationToMidnight relationToMidnight, int gYear, int gMonth, int gDay)
     {
-      _badi.GetGDate(bYear, bMonth, bDay, relationToMidnight).ShouldBeSameDayAs(new DateTime(gYear, gMonth, gDay));
+      _badi.GetGregorianDate(bYear, bMonth, bDay, relationToMidnight).ShouldBeSameDayAs(new DateTime(gYear, gMonth, gDay));
     }
 
     [Test]
     [TestCase(172, 18, 17, RelationToMidnight.bDay_BeforeSunset_Frag2, 2016, 2, 23)]
     [TestCase(172, 18, 17, RelationToMidnight.bEvePrior_AfterSunset_Frag1, 2016, 2, 22)]
-
     [TestCase(172, 17, 18, RelationToMidnight.bDay_BeforeSunset_Frag2, 2016, 2, 5)]
     public void GetGregorianDate_BeforeAyyamiHa(int bYear, int bMonth, int bDay, RelationToMidnight relationToMidnight, int gYear, int gMonth, int gDay)
     {
-      _badi.GetGDate(bYear, bMonth, bDay, relationToMidnight).ShouldBeSameDayAs(new DateTime(gYear, gMonth, gDay));
+      _badi.GetGregorianDate(bYear, bMonth, bDay, relationToMidnight).ShouldBeSameDayAs(new DateTime(gYear, gMonth, gDay));
     }
+
+    [Test]
+    [TestCase(172, 18, 19, RelationToMidnight.bDay_BeforeSunset_Frag2, 2016, 2, 25)]
+    [TestCase(172, 0, 1, RelationToMidnight.bDay_BeforeSunset_Frag2, 2016, 2, 26)]
+    [TestCase(172, 0, 2, RelationToMidnight.bDay_BeforeSunset_Frag2, 2016, 2, 27)]
+    [TestCase(172, 0, 3, RelationToMidnight.bDay_BeforeSunset_Frag2, 2016, 2, 28)]
+    [TestCase(172, 0, 4, RelationToMidnight.bDay_BeforeSunset_Frag2, 2016, 2, 29)]
+    [TestCase(172, 19, 1, RelationToMidnight.bDay_BeforeSunset_Frag2, 2016, 3, 1)]
+    public void GetGregorianDate_InAyyamiHa(int bYear, int bMonth, int bDay, RelationToMidnight relationToMidnight, int gYear, int gMonth, int gDay)
+    {
+      _badi.GetGregorianDate(bYear, bMonth, bDay, relationToMidnight).ShouldBeSameDayAs(new DateTime(gYear, gMonth, gDay));
+    }
+
 
     [Test]
     [TestCase(172, 15, 18, RelationToMidnight.bDay_BeforeSunset_Frag2, 2015, 12, 29, TestName = "AroundJanA 18 Questions frag 2")]
@@ -52,7 +64,7 @@ namespace BadiService.Tests.Badi
 
     public void GetGregorianDate_AroundJan1(int bYear, int bMonth, int bDay, RelationToMidnight relationToMidnight, int gYear, int gMonth, int gDay)
     {
-      _badi.GetGDate(bYear, bMonth, bDay, relationToMidnight).ShouldBeSameDayAs(new DateTime(gYear, gMonth, gDay));
+      _badi.GetGregorianDate(bYear, bMonth, bDay, relationToMidnight).ShouldBeSameDayAs(new DateTime(gYear, gMonth, gDay));
     }
 
 
@@ -109,7 +121,7 @@ namespace BadiService.Tests.Badi
     [TestCase(221, 1, 1, RelationToMidnight.bDay_BeforeSunset_Frag2, 2064, 3, 20)]
     public void GetGregorianDate_NawRuz(int bYear, int bMonth, int bDay, RelationToMidnight relationToMidnight, int gYear, int gMonth, int gDay)
     {
-      _badi.GetGDate(bYear, bMonth, bDay, relationToMidnight).ShouldBeSameDayAs(new DateTime(gYear, gMonth, gDay));
+      _badi.GetGregorianDate(bYear, bMonth, bDay, relationToMidnight).ShouldBeSameDayAs(new DateTime(gYear, gMonth, gDay));
     }
 
   }

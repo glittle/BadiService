@@ -19,30 +19,29 @@ namespace BadiService.Areas.Badi.Models
     {
       // strip off time
       gSourceDate = gSourceDate.Date;
-
       var bDayRelationToMidnight = relationToSunset == RelationToSunset.gAfterSunset
         ? RelationToMidnight.bEvePrior_AfterSunset_Frag1
         : RelationToMidnight.bDay_BeforeSunset_Frag2;
-
-      int bMonth;
-      int bDay;
 
       if (relationToSunset == RelationToSunset.gAfterSunset)
       {
         gSourceDate = gSourceDate.AddDays(1);
       }
 
-      var gDayOfNawRuz = GetNawRuz(gSourceDate.Year, true);
+      var gYear = gSourceDate.Year;
+      var gDayOfNawRuz = GetNawRuz(gYear, true);
       var gDayLoftiness1 = gDayOfNawRuz.AddDays(-19);
 
-      var bYear = gSourceDate.Year - (gSourceDate >= gDayOfNawRuz ? 1843 : 1844);
+      var bYear = gYear - (gSourceDate >= gDayOfNawRuz ? 1843 : 1844);
+      int bMonth;
+      int bDay;
 
       var isBeforeLoftiness = gSourceDate < gDayLoftiness1;
       if (isBeforeLoftiness)
       {
         // back: Jan --> end of AyyamiHa
-        var loftiness1LastYear = GetNawRuz(gSourceDate.Year - 1, true).AddDays(-19);
-        var daysAfterLoftiness1LastYear = (int) Math.Round((gSourceDate - loftiness1LastYear).TotalDays);
+        var gDayLoftiness1LastYear = GetNawRuz(gYear - 1, true).AddDays(-19);
+        var daysAfterLoftiness1LastYear = (int) Math.Round((gSourceDate - gDayLoftiness1LastYear).TotalDays);
         var numMonthsFromLoftinessLastYear = (int) Math.Floor(daysAfterLoftiness1LastYear / 19D);
 
         bDay = 1 + daysAfterLoftiness1LastYear - numMonthsFromLoftinessLastYear * 19;
@@ -71,7 +70,7 @@ namespace BadiService.Areas.Badi.Models
       return new BadiDate(bYear, bMonth, bDay, bDayRelationToMidnight);
     }
 
-    public DateTime GetGDate(int bYear, int bMonth, int bDay, RelationToMidnight relationToMidnight = RelationToMidnight.bDay_BeforeSunset_Frag2,
+    public DateTime GetGregorianDate(int bYear, int bMonth, int bDay, RelationToMidnight relationToMidnight = RelationToMidnight.bDay_BeforeSunset_Frag2,
       bool autoFix = false)
     {
       if (bMonth < 0)
@@ -128,24 +127,23 @@ namespace BadiService.Areas.Badi.Models
       switch (bMonth)
       {
         case 0:
-        case 19:
-
-          if (bMonth == 0)
+          var numDaysInAyyamiHa = DaysInAyyamiHa(bYear);
+          if (bDay > numDaysInAyyamiHa)
           {
-            var numDaysInAyyamiHa = DaysInAyyamiHa(bYear);
-            if (bDay > numDaysInAyyamiHa)
+            if (autoFix)
             {
-              if (autoFix)
-              {
-                bDay = numDaysInAyyamiHa;
-              }
-              else
-              {
-                throw new ApplicationException("Invalid day for Ayyam-i-Ha: " + bDay);
-              }
+              bDay = numDaysInAyyamiHa;
+            }
+            else
+            {
+              throw new ApplicationException("Invalid day for Ayyam-i-Ha: " + bDay);
             }
           }
+          answer = GetGregorianDate(bYear, 18, 19).AddDays(bDay);
 
+          break;
+
+        case 19:
           var nextNawRuz = GetNawRuz(gYear + 1, true);
           var firstDayOfLoftiness = nextNawRuz.AddDays(-19);
 
@@ -155,7 +153,7 @@ namespace BadiService.Areas.Badi.Models
         default:
           var nawRuz = GetNawRuz(gYear, true);
           //var beforeMidnightOffset = relationToMidnight == RelationToMidnight.bDay_BeforeSunset_Frag2 ? 1 : 0;
-          answer = nawRuz.AddDays((bMonth - 1) * 19 + bDay - 1);
+          answer = nawRuz.AddDays((bMonth - 1)*19 + bDay - 1);
           break;
       }
 
@@ -170,23 +168,23 @@ namespace BadiService.Areas.Badi.Models
 
     public int DaysInAyyamiHa(int bYear)
     {
-      var firstDayOfAyyamiHa = GetGDate(bYear, 18, 19).AddDays(1);
-      var lastDayOfAyyamiHa = GetGDate(bYear, 19, 1).AddDays(-1);
+      var firstDayOfAyyamiHa = GetGregorianDate(bYear, 18, 19).AddDays(1);
+      var lastDayOfAyyamiHa = GetGregorianDate(bYear, 19, 1).AddDays(-1);
 
       return DaysBetween(firstDayOfAyyamiHa, lastDayOfAyyamiHa);
     }
 
-    private DateTime GetNawRuz(int gYear, bool dateOnly = false)
+    private DateTime GetNawRuz(int gYear, bool frag2DateOnly = false)
     {
       // the first moment of the new year... at sunset usually on March 19 sunset or March 20 sunset
-      // if dateOnly, then the following day
+      // if frag2DateOnly, then the following day
       var nawRuz = new DateTime(
         gYear,
         3,
-        (dateOnly ? 21 : 20) + PresetKnowledge.GetNawRuzOffset(gYear - 1843)
+        (frag2DateOnly ? 21 : 20) + PresetKnowledge.GetNawRuzOffset(gYear - 1843)
         );
 
-      return dateOnly
+      return frag2DateOnly
         ? nawRuz
         : _sunCalc.AtSunset(nawRuz);
     }
