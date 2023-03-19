@@ -1,2 +1,1 @@
-# BadiService
-Get information about the Badi calendar
+OLD - See BadiService2
